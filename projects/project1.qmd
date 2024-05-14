@@ -1,0 +1,161 @@
+---
+title: "Client Report - Project1"
+subtitle: "Course DS 250"
+author: "Mosiah Valdez-Bates"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+# Question 1
+* How does your name at your birth year compare to its use historically?
+
+I accomplish the above task, it is clear that name "Tom" was at the bottom of a 25 year high, the name had begun to even out at a slow but steady decrease.
+
+```{python}
+import pandas as pd
+import plotly.express as px
+
+df = pd.read_csv('/Users/mosiahvaldez-bates/Desktop/Spring semester 2024/ds-250/projects/names_year.csv')
+```
+
+
+```{python}
+myname_data = df[df['name'] == 'Tom']
+
+fig = px.line(
+    myname_data, 
+    x='year', 
+    y='Total', 
+    title=f'The Use of Tom Over Time' )
+
+fig.add_shape(
+    type = 'circle',
+    line_color = 'green',
+    line_width = 3,
+    line_dash = 'dot',
+    opacity = 1,
+    x0 = 1995, x1=2004,
+    y0=-100,y1=250 )
+
+fig.add_annotation(
+    x=1999,
+    y=100,  
+    text="Born in 1999" )
+fig.show()
+```
+
+# Question 2
+* If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess?
+
+Speak to answer the question above, I believe if I was talking to a Britney on the phone, she would be 34. I would not guess 56 or 9.
+
+```{python}
+name_data = df[df['name'] == 'Brittany']
+
+fig = px.line(
+    name_data, 
+    x='year', 
+    y='Total', 
+    title=f'The Use of Brittany Over Time' )
+
+fig.add_vline(
+    x=1990, 
+    line_dash='dot', line_color='red' )
+fig.show()
+```
+
+# Question 3
+* Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names. What trends do you notice?
+
+The graph below demonstrates the trends of biblical names from 1920 to 2000. It is clear that Mary was, and still is the most popular of the biblical names provided. The popularity, For these biblical names, then follows the pattern of Paul, Peter, then Martha. The biblical names were quite popular before the 60s, then began to lower after the 60s resulting in all-time lows in 2000 for all names except Paul, which remains just above its all time low number reached in the 30's.  
+
+```{python}
+mary = df[(df['name'] == 'Mary') & (df['year'] >= 1920) & (df['year'] <= 2000)]
+martha = df[(df['name'] == 'Martha') & (df['year'] >= 1920) & (df['year'] <= 2000)]
+peter = df[(df['name'] == 'Peter') & (df['year'] >= 1920) & (df['year'] <= 2000)]
+paul = df[(df['name'] == 'Paul') & (df['year'] >= 1920) & (df['year'] <= 2000)]
+
+allnames = pd.concat([mary, martha, peter, paul])
+
+fig = px.line(
+    allnames,
+    x='year', 
+    y='Total', 
+    color='name',
+    title=f'The Use of Biblical Names Over Time' )
+
+fig.show()
+```
+
+# Question 4
+* Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?
+
+Based off of my findings, it appears that the X-Men movie may have had a impact on the name, Logan from the character wolverine. It is clear that it increased drastically within the year that X-Men was released and perform the same after the second movie released. As can be seen in the graph below. 
+
+```{python}
+name_data = df[df['name'] == 'Logan']
+
+fig = px.line(
+    name_data, 
+    x='year', 
+    y='Total', 
+    title=f'The name Logan In relation to the first and second X-Men movies being released' )
+
+fig.add_vline(
+    x=2000, 
+    line_dash='dot', line_color='red',
+    name='First X-Men movie released (2000)')
+fig.add_vline(
+    x=2006, 
+    line_dash='dot', line_color='green',
+    name='Second X-Men movie released (2006)')
+fig.show()
+```
+
+# Stretch Example Assignment 
+* This is a graph showing the name Elliot in relation to the release of the ET movie.
+
+```{python}
+name_data = df[df['name'] == 'Elliot']
+
+fig = px.line(
+    name_data, 
+    color = 'name',
+    x='year', 
+    y='Total', 
+    title=f'ET release dates' )
+
+fig.add_vline(
+    x=1982, 
+    line_dash='dot', line_color='red',
+    name='first release')
+fig.add_vline(
+    x=1988, 
+    line_dash='dot', line_color='red',
+    name='VHS release')
+fig.add_vline(
+    x=2002, 
+    line_dash='dot', line_color='red',
+    name='20th anniversary release' )
+fig.update_layout(showlegend=True)
+fig.show()
+```
